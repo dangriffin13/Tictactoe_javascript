@@ -65,7 +65,13 @@ function tictacController(){
 	$(".col-md-4").on('click',function(event){
 		$(this).html("<p>"+player+"</p>")
 		console.log(event.target.id);
-		gridUpdate(event.target.id);
+		console.log($(this).text())
+		if $(this).text() === ("X" || "O"){
+			alert("That square has already been played.  Click on a blank square.");
+		} else {
+			gridUpdate(event.target.id);
+		}
+		
 		if (checkWin() === true) {
 			endGame();
 		}
