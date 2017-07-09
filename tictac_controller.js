@@ -6,6 +6,7 @@ var grid = [
 		]
 
 var player = "O"
+var turnCount = 0
 
 function checkWin(){
 
@@ -33,6 +34,7 @@ function checkWin(){
 	}
 }
 
+
 function gridUpdate(gridLocation){
 
 	for (var i = 0; i < grid.length; i++){
@@ -44,10 +46,17 @@ function gridUpdate(gridLocation){
 	}
 }
 
-function endGame(){
-	alert("Player "+player+" wins!");
+function endGame(player){
+	console.log("player received by endGame", player);
+	console.log("player = O", player === "O")
+	if (player === "X" || player === "O") {
+		alert("Player "+player+" wins!");
+	} else {
+		alert("This game ends in a draw.  Click OK to play again.")
+	}
 	
-	$(".col-md-4").empty()
+	$(".col-md-4").empty();
+	turnCount = 0;
 
 	grid = [
 		["upperleft", "uppercenter", "upperright"],
@@ -57,31 +66,36 @@ function endGame(){
 }
 
 function tictacController(){
-	// $("#uppercenter").click(function(){
-	// 	$("#uppercenter").html("<p>x</p>")
-	// })
-
-	//need to change this to be X or O depending on user
 	$(".col-md-4").on('click',function(event){
-		$(this).html("<p>"+player+"</p>")
+		console.log("contents after click", $(this).text())
 		console.log(event.target.id);
-		console.log($(this).text())
-		if $(this).text() === ("X" || "O"){
+
+		// check if the square has already been used
+		if ($(this).text() === ("X" || "O")){
 			alert("That square has already been played.  Click on a blank square.");
 		} else {
 			gridUpdate(event.target.id);
-		}
+			$(this).html("<p>"+player+"</p>");
+			turnCount = turnCount + 1;
+			console.log("contents after insertion of player name",$(this).text());
 		
-		if (checkWin() === true) {
-			endGame();
-		}
-		if (player === "O") {
-			player = "X";
-		} else {
-			player = "O";
+			//check for win or draw (board is full)
+			if (checkWin() === true) {
+				console.log("player passed to endGame", player)
+				endGame(player);
+			} else if (turnCount === 9) {
+				player = "Draw";
+				endGame(player);
+			}
+
+			// switch the player for the next turn
+			if (player === "O") {
+				player = "X";
+			} else {
+				player = "O";
+			}
 		}
 	})
-
 }
 
 
